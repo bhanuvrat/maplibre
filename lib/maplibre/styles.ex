@@ -1,6 +1,675 @@
 defmodule MapLibre.Styles do
   @moduledoc false
 
+  @dark %{
+    "version" => 8,
+    "sources" => %{
+      "protomaps" => %{
+        "type" => "vector",
+        "tiles" => ["https://demo.buoy.fish/mvtiles/world/{z}/{x}/{y}.mvt"],
+        "maxzoom" => 15
+      }
+    },
+    "glyphs" => "https://cdn.protomaps.com/fonts/pbf/{fontstack}/{range}.pbf",
+    "layers" => [
+      %{
+        "id" => "background",
+        "paint" => %{"background-color" => "#2A2A2A"},
+        "type" => "background"
+      },
+      %{
+        "id" => "earth",
+        "paint" => %{"fill-color" => "#2A2A2A"},
+        "source" => "protomaps",
+        "source-layer" => "earth",
+        "type" => "fill"
+      },
+      %{
+        "filter" => [
+          "any",
+          ["==", "pmap:kind", "park"],
+          ["==", "landuse", "cemetery"]
+        ],
+        "id" => "landuse_park",
+        "paint" => %{"fill-color" => "#2A2A2A"},
+        "source" => "protomaps",
+        "source-layer" => "landuse",
+        "type" => "fill"
+      },
+      %{
+        "filter" => ["any", ["==", "pmap:kind", "hospital"]],
+        "id" => "landuse_hospital",
+        "paint" => %{"fill-color" => "#2A2A2A"},
+        "source" => "protomaps",
+        "source-layer" => "landuse",
+        "type" => "fill"
+      },
+      %{
+        "filter" => ["any", ["==", "pmap:kind", "industrial"]],
+        "id" => "landuse_industrial",
+        "paint" => %{"fill-color" => "#2A2A2A"},
+        "source" => "protomaps",
+        "source-layer" => "landuse",
+        "type" => "fill"
+      },
+      %{
+        "filter" => ["any", ["==", "pmap:kind", "school"]],
+        "id" => "landuse_school",
+        "paint" => %{"fill-color" => "#2A2A2A"},
+        "source" => "protomaps",
+        "source-layer" => "landuse",
+        "type" => "fill"
+      },
+      %{
+        "filter" => [
+          "any",
+          ["==", "natural", "wood"],
+          ["==", "leisure", "nature_reserve"],
+          ["==", "landuse", "forest"]
+        ],
+        "id" => "natural_wood",
+        "paint" => %{"fill-color" => "#2A2A2A"},
+        "source" => "protomaps",
+        "source-layer" => "natural",
+        "type" => "fill"
+      },
+      %{
+        "filter" => ["any", ["==", "highway", "footway"]],
+        "id" => "landuse_pedestrian",
+        "paint" => %{"fill-color" => "#2A2A2A"},
+        "source" => "protomaps",
+        "source-layer" => "landuse",
+        "type" => "fill"
+      },
+      %{
+        "filter" => ["==", "natural", "glacier"],
+        "id" => "natural_glacier",
+        "paint" => %{"fill-color" => "#2A2A2A"},
+        "source" => "protomaps",
+        "source-layer" => "natural",
+        "type" => "fill"
+      },
+      %{
+        "filter" => ["==", "natural", "sand"],
+        "id" => "natural_sand",
+        "paint" => %{"fill-color" => "#2A2A2A"},
+        "source" => "protomaps",
+        "source-layer" => "natural",
+        "type" => "fill"
+      },
+      %{
+        "filter" => ["==", "aeroway", "aerodrome"],
+        "id" => "landuse_aerodrome",
+        "paint" => %{"fill-color" => "#2A2A2A"},
+        "source" => "protomaps",
+        "source-layer" => "landuse",
+        "type" => "fill"
+      },
+      %{
+        "filter" => ["has", "aeroway"],
+        "id" => "transit_runway",
+        "paint" => %{"line-color" => "#2A2A2A", "line-width" => 6},
+        "source" => "protomaps",
+        "source-layer" => "transit",
+        "type" => "line"
+      },
+      %{
+        "filter" => [
+          "any",
+          ["==", "aeroway", "runway"],
+          ["==", "area:aeroway", "runway"],
+          ["==", "area:aeroway", "taxiway"]
+        ],
+        "id" => "landuse_runway",
+        "paint" => %{"fill-color" => "#2A2A2A"},
+        "source" => "protomaps",
+        "source-layer" => "landuse",
+        "type" => "fill"
+      },
+      %{
+        "id" => "water",
+        "paint" => %{"fill-color" => "#202020"},
+        "source" => "protomaps",
+        "source-layer" => "water",
+        "type" => "fill"
+      },
+      %{
+        "filter" => ["all", ["<", "pmap:level", 0], ["==", "pmap:kind", "other"]],
+        "id" => "roads_tunnels_other",
+        "paint" => %{
+          "line-color" => "#3D3D3D",
+          "line-dasharray" => [1, 1],
+          "line-width" => [
+            "interpolate",
+            ["exponential", 1.6],
+            ["zoom"],
+            14,
+            0,
+            14.5,
+            0.5,
+            20,
+            12
+          ]
+        },
+        "source" => "protomaps",
+        "source-layer" => "roads",
+        "type" => "line"
+      },
+      %{
+        "filter" => [
+          "all",
+          ["<", "pmap:level", 0],
+          ["==", "pmap:kind", "minor_road"]
+        ],
+        "id" => "roads_tunnels_minor",
+        "paint" => %{
+          "line-color" => "#3D3D3D",
+          "line-width" => [
+            "interpolate",
+            ["exponential", 1.6],
+            ["zoom"],
+            12,
+            0,
+            12.5,
+            0.5,
+            20,
+            32
+          ]
+        },
+        "source" => "protomaps",
+        "source-layer" => "roads",
+        "type" => "line"
+      },
+      %{
+        "filter" => [
+          "all",
+          ["<", "pmap:level", 0],
+          ["==", "pmap:kind", "medium_road"]
+        ],
+        "id" => "roads_tunnels_medium",
+        "paint" => %{
+          "line-color" => "#3D3D3D",
+          "line-width" => [
+            "interpolate",
+            ["exponential", 1.6],
+            ["zoom"],
+            7,
+            0,
+            7.5,
+            0.5,
+            20,
+            32
+          ]
+        },
+        "source" => "protomaps",
+        "source-layer" => "roads",
+        "type" => "line"
+      },
+      %{
+        "filter" => [
+          "all",
+          ["<", "pmap:level", 0],
+          ["==", "pmap:kind", "major_road"]
+        ],
+        "id" => "roads_tunnels_major",
+        "paint" => %{
+          "line-color" => "#3D3D3D",
+          "line-width" => [
+            "interpolate",
+            ["exponential", 1.6],
+            ["zoom"],
+            7,
+            0,
+            7.5,
+            0.5,
+            19,
+            32
+          ]
+        },
+        "source" => "protomaps",
+        "source-layer" => "roads",
+        "type" => "line"
+      },
+      %{
+        "filter" => ["all", ["<", "pmap:level", 0], ["==", "pmap:kind", "highway"]],
+        "id" => "roads_tunnels_highway",
+        "paint" => %{
+          "line-color" => "#3D3D3D",
+          "line-width" => [
+            "interpolate",
+            ["exponential", 1.6],
+            ["zoom"],
+            3,
+            0,
+            3.5,
+            0.5,
+            18,
+            32
+          ]
+        },
+        "source" => "protomaps",
+        "source-layer" => "roads",
+        "type" => "line"
+      },
+      %{
+        "filter" => ["==", ["get", "pmap:kind"], "waterway"],
+        "id" => "physical_line_waterway",
+        "paint" => %{"line-color" => "#202020", "line-width" => 0.5},
+        "source" => "protomaps",
+        "source-layer" => "physical_line",
+        "type" => "line"
+      },
+      %{
+        "filter" => ["all", ["==", "pmap:level", 0], ["==", "pmap:kind", "other"]],
+        "id" => "roads_other",
+        "paint" => %{
+          "line-color" => "#3D3D3D",
+          "line-dasharray" => [2, 1],
+          "line-width" => [
+            "interpolate",
+            ["exponential", 1.6],
+            ["zoom"],
+            14,
+            0,
+            14.5,
+            0.5,
+            20,
+            12
+          ]
+        },
+        "source" => "protomaps",
+        "source-layer" => "roads",
+        "type" => "line"
+      },
+      %{
+        "filter" => [
+          "all",
+          ["==", "pmap:level", 0],
+          ["==", "pmap:kind", "minor_road"]
+        ],
+        "id" => "roads_minor",
+        "paint" => %{
+          "line-color" => "#3D3D3D",
+          "line-width" => [
+            "interpolate",
+            ["exponential", 1.6],
+            ["zoom"],
+            12,
+            0,
+            12.5,
+            0.5,
+            20,
+            32
+          ]
+        },
+        "source" => "protomaps",
+        "source-layer" => "roads",
+        "type" => "line"
+      },
+      %{
+        "filter" => [
+          "all",
+          ["==", "pmap:level", 0],
+          ["==", "pmap:kind", "medium_road"]
+        ],
+        "id" => "roads_medium",
+        "paint" => %{
+          "line-color" => "#3D3D3D",
+          "line-width" => [
+            "interpolate",
+            ["exponential", 1.6],
+            ["zoom"],
+            7,
+            0,
+            7.5,
+            0.5,
+            20,
+            32
+          ]
+        },
+        "source" => "protomaps",
+        "source-layer" => "roads",
+        "type" => "line"
+      },
+      %{
+        "filter" => [
+          "all",
+          ["==", "pmap:level", 0],
+          ["==", "pmap:kind", "major_road"]
+        ],
+        "id" => "roads_major",
+        "paint" => %{
+          "line-color" => "#3D3D3D",
+          "line-width" => [
+            "interpolate",
+            ["exponential", 1.6],
+            ["zoom"],
+            7,
+            0,
+            7.5,
+            0.5,
+            19,
+            32
+          ]
+        },
+        "source" => "protomaps",
+        "source-layer" => "roads",
+        "type" => "line"
+      },
+      %{
+        "filter" => ["all", ["==", "pmap:level", 0], ["==", "pmap:kind", "highway"]],
+        "id" => "roads_highway",
+        "paint" => %{
+          "line-color" => "#3D3D3D",
+          "line-width" => [
+            "interpolate",
+            ["exponential", 1.6],
+            ["zoom"],
+            3,
+            0,
+            3.5,
+            0.5,
+            18,
+            32
+          ]
+        },
+        "source" => "protomaps",
+        "source-layer" => "roads",
+        "type" => "line"
+      },
+      %{
+        "filter" => ["all", ["==", "pmap:kind", "railway"]],
+        "id" => "transit_railway",
+        "paint" => %{"line-color" => "#3D3D3D", "line-width" => 2},
+        "source" => "protomaps",
+        "source-layer" => "transit",
+        "type" => "line"
+      },
+      %{
+        "filter" => ["all", ["==", "pmap:kind", "railway"]],
+        "id" => "transit_railway_tracks",
+        "paint" => %{
+          "line-color" => "#3D3D3D",
+          "line-dasharray" => [6, 10],
+          "line-width" => 0.8
+        },
+        "source" => "protomaps",
+        "source-layer" => "transit",
+        "type" => "line"
+      },
+      %{
+        "filter" => ["<=", "pmap:min_admin_level", 2],
+        "id" => "boundaries_country",
+        "paint" => %{"line-color" => "#696969", "line-width" => 1.5},
+        "source" => "protomaps",
+        "source-layer" => "boundaries",
+        "type" => "line"
+      },
+      %{
+        "filter" => [">", "pmap:min_admin_level", 2],
+        "id" => "boundaries",
+        "paint" => %{
+          "line-color" => "#696969",
+          "line-dasharray" => [1, 2],
+          "line-width" => 1
+        },
+        "source" => "protomaps",
+        "source-layer" => "boundaries",
+        "type" => "line"
+      },
+      %{
+        "filter" => ["all", [">", "pmap:level", 0], ["==", "pmap:kind", "other"]],
+        "id" => "roads_bridges_other",
+        "paint" => %{
+          "line-color" => "#3D3D3D",
+          "line-dasharray" => [2, 1],
+          "line-width" => [
+            "interpolate",
+            ["exponential", 1.6],
+            ["zoom"],
+            14,
+            0,
+            14.5,
+            0.5,
+            20,
+            12
+          ]
+        },
+        "source" => "protomaps",
+        "source-layer" => "roads",
+        "type" => "line"
+      },
+      %{
+        "filter" => [
+          "all",
+          [">", "pmap:level", 0],
+          ["==", "pmap:kind", "minor_road"]
+        ],
+        "id" => "roads_bridges_minor",
+        "paint" => %{
+          "line-color" => "#3D3D3D",
+          "line-width" => [
+            "interpolate",
+            ["exponential", 1.6],
+            ["zoom"],
+            12,
+            0,
+            12.5,
+            0.5,
+            20,
+            32
+          ]
+        },
+        "source" => "protomaps",
+        "source-layer" => "roads",
+        "type" => "line"
+      },
+      %{
+        "filter" => [
+          "all",
+          [">", "pmap:level", 0],
+          ["==", "pmap:kind", "medium_road"]
+        ],
+        "id" => "roads_bridges_medium",
+        "paint" => %{
+          "line-color" => "#3D3D3D",
+          "line-width" => [
+            "interpolate",
+            ["exponential", 1.6],
+            ["zoom"],
+            7,
+            0,
+            7.5,
+            0.5,
+            20,
+            32
+          ]
+        },
+        "source" => "protomaps",
+        "source-layer" => "roads",
+        "type" => "line"
+      },
+      %{
+        "filter" => [
+          "all",
+          [">", "pmap:level", 0],
+          ["==", "pmap:kind", "major_road"]
+        ],
+        "id" => "roads_bridges_major",
+        "paint" => %{
+          "line-color" => "#3D3D3D",
+          "line-width" => [
+            "interpolate",
+            ["exponential", 1.6],
+            ["zoom"],
+            7,
+            0,
+            7.5,
+            0.5,
+            19,
+            32
+          ]
+        },
+        "source" => "protomaps",
+        "source-layer" => "roads",
+        "type" => "line"
+      },
+      %{
+        "filter" => ["all", [">", "pmap:level", 0], ["==", "pmap:kind", "highway"]],
+        "id" => "roads_bridges_highway",
+        "paint" => %{
+          "line-color" => "#3D3D3D",
+          "line-width" => [
+            "interpolate",
+            ["exponential", 1.6],
+            ["zoom"],
+            3,
+            0,
+            3.5,
+            0.5,
+            18,
+            32
+          ]
+        },
+        "source" => "protomaps",
+        "source-layer" => "roads",
+        "type" => "line"
+      },
+      %{
+        "id" => "physical_line_waterway_label",
+        "layout" => %{
+          "symbol-placement" => "line",
+          "text-field" => ["get", "name"],
+          "text-font" => ["NotoSans-Regular"],
+          "text-letter-spacing" => 0.3,
+          "text-size" => 10
+        },
+        "minzoom" => 14,
+        "paint" => %{
+          "text-color" => "#6D6D6D",
+          "text-halo-color" => "#151515",
+          "text-halo-width" => 1
+        },
+        "source" => "protomaps",
+        "source-layer" => "physical_line",
+        "type" => "symbol"
+      },
+      %{
+        "id" => "roads_labels",
+        "layout" => %{
+          "symbol-placement" => "line",
+          "text-field" => ["get", "name"],
+          "text-font" => ["NotoSans-Regular"],
+          "text-size" => 12
+        },
+        "paint" => %{
+          "text-color" => "#6D6D6D",
+          "text-halo-color" => "#151515",
+          "text-halo-width" => 2
+        },
+        "source" => "protomaps",
+        "source-layer" => "roads",
+        "type" => "symbol"
+      },
+      %{
+        "id" => "mask",
+        "paint" => %{"fill-color" => "#F3F3F1"},
+        "source" => "protomaps",
+        "source-layer" => "mask",
+        "type" => "fill"
+      },
+      %{
+        "filter" => ["any", ["==", "place", "sea"], ["==", "place", "ocean"]],
+        "id" => "physical_point_ocean",
+        "layout" => %{
+          "text-field" => ["get", "name"],
+          "text-font" => ["NotoSans-Regular"],
+          "text-letter-spacing" => 0.2,
+          "text-size" => 13
+        },
+        "paint" => %{"text-color" => "#6D6D6D"},
+        "source" => "protomaps",
+        "source-layer" => "physical_point",
+        "type" => "symbol"
+      },
+      %{
+        "filter" => ["==", "pmap:kind", "neighbourhood"],
+        "id" => "places_subplace",
+        "layout" => %{
+          "text-field" => "{name:en}",
+          "text-font" => ["NotoSans-Regular"],
+          "text-size" => 10,
+          "text-transform" => "uppercase"
+        },
+        "paint" => %{
+          "text-color" => "#6D6D6D",
+          "text-halo-color" => "#151515",
+          "text-halo-width" => 0.5
+        },
+        "source" => "protomaps",
+        "source-layer" => "places",
+        "type" => "symbol"
+      },
+      %{
+        "filter" => ["==", "pmap:kind", "city"],
+        "id" => "places_city",
+        "layout" => %{
+          "text-field" => "{name:en}",
+          "text-font" => ["NotoSans-Regular"],
+          "text-radial-offset" => 0.2,
+          "text-size" => ["step", ["get", "pmap:rank"], 0, 1, 12, 2, 10],
+          "text-variable-anchor" => ["bottom-left"]
+        },
+        "paint" => %{
+          "text-color" => "#6D6D6D",
+          "text-halo-color" => "#151515",
+          "text-halo-width" => 1
+        },
+        "source" => "protomaps",
+        "source-layer" => "places",
+        "type" => "symbol"
+      },
+      %{
+        "filter" => ["==", "pmap:kind", "state"],
+        "id" => "places_state",
+        "layout" => %{
+          "text-anchor" => "center",
+          "text-field" => "{name:en}",
+          "text-font" => ["NotoSans-Regular"],
+          "text-letter-spacing" => 0.1,
+          "text-radial-offset" => 0.2,
+          "text-size" => 14,
+          "text-transform" => "uppercase"
+        },
+        "paint" => %{
+          "text-color" => "#6D6D6D",
+          "text-halo-color" => "#151515",
+          "text-halo-width" => 1
+        },
+        "source" => "protomaps",
+        "source-layer" => "places",
+        "type" => "symbol"
+      },
+      %{
+        "filter" => ["==", "place", "country"],
+        "id" => "places_country",
+        "layout" => %{
+          "text-field" => "{name:en}",
+          "text-font" => ["NotoSans-Regular"],
+          "text-size" => 10
+        },
+        "paint" => %{
+          "text-color" => "#6D6D6D",
+          "text-halo-color" => "#151515",
+          "text-halo-width" => 1
+        },
+        "source" => "protomaps",
+        "source-layer" => "places",
+        "type" => "symbol"
+      }
+    ]
+  }
+
   @default %{
     "bearing" => 0,
     "center" => [17.65431710431244, 32.954120326746775],
@@ -777,6 +1446,7 @@ defmodule MapLibre.Styles do
   def style(:default, _key), do: @default
   def style(:street, key), do: street(key)
   def style(:terrain, key), do: terrain(key)
+  def style(:dark, _key), do: @dark
 
   def style(style, _key),
     do:
